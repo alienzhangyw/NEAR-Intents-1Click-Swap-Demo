@@ -34,7 +34,6 @@ jobs:
         run: yarn build
         env:
           VITE_ONECLICK_JWT: ${{ secrets.VITE_ONECLICK_JWT }}
-          VITE_ONECLICK_BASE_URL: ${{ secrets.VITE_ONECLICK_BASE_URL }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

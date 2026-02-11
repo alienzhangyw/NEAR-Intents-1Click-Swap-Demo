@@ -42,7 +42,7 @@ VITE_POLL_INTERVAL_MS=10000
 - `VITE_ONECLICK_JWT` is optional but recommended to reduce fees.
 - `VITE_ONECLICK_BASE_URL` defaults to the public 1Click endpoint.
 
-For GitHub Pages deployment, store `VITE_ONECLICK_JWT` in GitHub Secrets and it will be injected during the build step. Non-sensitive defaults can live in `.env` locally.
+For GitHub Pages deployment, store `VITE_ONECLICK_JWT` in GitHub Secrets and it will be injected during the build step.
 
 ## GitHub Pages
 
