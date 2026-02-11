@@ -1,0 +1,22 @@
+{
+  "name": "intents",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@defuse-protocol/one-click-sdk-typescript": "latest",
+    "ethers": "^6.13.5"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0-beta.13"
+  },
+  "resolutions": {
+    "vite": "^8.0.0-beta.13"
+  }
+}
