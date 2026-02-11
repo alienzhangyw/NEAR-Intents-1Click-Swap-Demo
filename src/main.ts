@@ -49,7 +49,7 @@ app.innerHTML = `
         <div class="brand-badge">1Click</div>
         <div>
           <p class="eyebrow">NEAR Intents</p>
-          <h1>跨链 1Click Swap Demo</h1>
+          <h1>NEAR Intents 1Click Swap Demo</h1>
           <p class="subtitle">连接 MetaMask，发起跨链兑换意图，自动撮合并完成结算。</p>
         </div>
       </div>
