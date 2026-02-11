@@ -1,10 +1,9 @@
-import { QuoteRequest } from '@defuse-protocol/one-click-sdk-typescript';
+import { QuoteRequest, type TokenResponse } from '@defuse-protocol/one-click-sdk-typescript';
 import { formatUnits, parseUnits } from 'ethers';
 import { CONFIG } from './config';
 import { getExecutionStatus, requestQuote, submitDepositTx, toErrorMessage } from './intent/swap';
 import { fetchTokens } from './intent/tokens';
 import './style.css';
-import type { TokenInfo } from './types';
 import { connectEvmWallet, getEvmBalance, onEvmEvents, sendEvmDeposit } from './wallet/evm';
 
 type QuoteResponse = Awaited<ReturnType<typeof requestQuote>>;
@@ -12,7 +11,7 @@ type QuoteResponse = Awaited<ReturnType<typeof requestQuote>>;
 type AppState = {
   walletAddress: string | null;
   chainId: number | null;
-  tokens: TokenInfo[];
+  tokens: TokenResponse[];
   originAssetId: string;
   destinationAssetId: string;
   amount: string;
@@ -280,10 +279,9 @@ function updateQuotePreview(quote: QuoteResponse | null) {
   const destinationToken = getTokenById(state.destinationAssetId);
   const amountOutDisplay = details.amountOutFormatted
     ?? (destinationToken ? formatUnits(details.amountOut ?? '0', destinationToken.decimals) : details.amountOut ?? '-');
-  const minAmountOutDisplay = details.minAmountOutFormatted
-    ?? (destinationToken && details.minAmountOut
-      ? formatUnits(details.minAmountOut, destinationToken.decimals)
-      : amountOutDisplay);
+  const minAmountOutDisplay = destinationToken && details.minAmountOut
+    ? formatUnits(details.minAmountOut, destinationToken.decimals)
+    : amountOutDisplay;
   const amountInDisplay = details.amountInFormatted ?? '-';
   const originSymbol = originToken?.symbol ?? '';
   const destinationSymbol = destinationToken?.symbol ?? '';
@@ -309,7 +307,7 @@ function updateStatus(message: string, detail?: string) {
   elements.swapDetails.textContent = detail ?? '';
 }
 
-function getTokenById(assetId: string): TokenInfo | undefined {
+function getTokenById(assetId: string): TokenResponse | undefined {
   return state.tokens.find((token) => token.assetId === assetId);
 }
 

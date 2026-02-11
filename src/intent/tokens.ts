@@ -1,6 +1,5 @@
-import { OneClickService, OpenAPI } from '@defuse-protocol/one-click-sdk-typescript';
+import { OneClickService, OpenAPI, type TokenResponse } from '@defuse-protocol/one-click-sdk-typescript';
 import { CONFIG } from '../config';
-import type { TokenInfo } from '../types';
 
 let initialized = false;
 
@@ -12,9 +11,9 @@ function initClient() {
   initialized = true;
 }
 
-export async function fetchTokens(): Promise<TokenInfo[]> {
+export async function fetchTokens(): Promise<TokenResponse[]> {
   initClient();
-  const data = (await OneClickService.getTokens()) as TokenInfo[];
+  const data = (await OneClickService.getTokens());
   return data.sort((a, b) => {
     const chainCompare = a.blockchain.localeCompare(b.blockchain);
     if (chainCompare !== 0) {

@@ -1,5 +1,5 @@
+import type { TokenResponse } from '@defuse-protocol/one-click-sdk-typescript';
 import { BrowserProvider, Contract } from 'ethers';
-import type { TokenInfo } from '../types';
 
 const ERC20_ABI = [
   'function transfer(address to, uint256 amount) returns (bool)',
@@ -52,7 +52,7 @@ export function onEvmEvents(handler: (address: string | null, chainId: number | 
 }
 
 type SendDepositParams = {
-  token: TokenInfo;
+  token: TokenResponse;
   to: string;
   amountBase: string;
   expectedChainId: number | null;
@@ -87,7 +87,7 @@ export async function sendEvmDeposit(params: SendDepositParams): Promise<string>
   return tx.hash as string;
 }
 
-export async function getEvmBalance(params: { token: TokenInfo; address: string }): Promise<string> {
+export async function getEvmBalance(params: { token: TokenResponse; address: string }): Promise<string> {
   const provider = getProvider();
   const browserProvider = new BrowserProvider(provider as unknown as {
     request: (args: { method: string; params?: Array<unknown> | Record<string, unknown> }) => Promise<unknown>;
