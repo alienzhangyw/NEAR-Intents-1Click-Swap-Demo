@@ -11,7 +11,7 @@ const RAW_RUNTIME_STATE =
   ],\
   "dependencyTreeRoots": [\
     {\
-      "name": "intents",\
+      "name": "near-intents-1click-swap-demo",\
       "reference": "workspace:."\
     }\
   ],\
@@ -19,7 +19,7 @@ const RAW_RUNTIME_STATE =
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "pnpZipBackend": "libzip",\
   "fallbackExclusionList": [\
-    ["intents", ["workspace:."]]\
+    ["near-intents-1click-swap-demo", ["workspace:."]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -30,9 +30,9 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@defuse-protocol/one-click-sdk-typescript", "npm:0.1.15"],\
           ["ethers", "npm:6.16.0"],\
-          ["intents", "workspace:."],\
+          ["near-intents-1click-swap-demo", "workspace:."],\
           ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
-          ["vite", "virtual:4806ae6e98066b4378e1427ed480aa2d9dc411030658bf7815a2cd3458befef5468cb9dcdd4c69b9470d1e978d8cc240fdbf485997de6a13c4a5cd1af95935f0#npm:8.0.0-beta.13"]\
+          ["vite", "virtual:37acf137c24d713a65f9150646eff09a53444a41da47ce5c64fd5f1a9464aeeac415722409bf0b78ad5bc8c2db75a86d9535f36953382d8ae6743e56cd4d0126#npm:8.0.0-beta.13"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -838,19 +838,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["intents", [\
-      ["workspace:.", {\
-        "packageLocation": "./",\
-        "packageDependencies": [\
-          ["@defuse-protocol/one-click-sdk-typescript", "npm:0.1.15"],\
-          ["ethers", "npm:6.16.0"],\
-          ["intents", "workspace:."],\
-          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
-          ["vite", "virtual:4806ae6e98066b4378e1427ed480aa2d9dc411030658bf7815a2cd3458befef5468cb9dcdd4c69b9470d1e978d8cc240fdbf485997de6a13c4a5cd1af95935f0#npm:8.0.0-beta.13"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["ip-address", [\
       ["npm:10.1.0", {\
         "packageLocation": "../../AppData/Local/Yarn/Berry/cache/ip-address-npm-10.1.0-d5d5693401-10c0.zip/node_modules/ip-address/",\
@@ -1152,6 +1139,19 @@ const RAW_RUNTIME_STATE =
           ["nanoid", "npm:3.3.11"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["near-intents-1click-swap-demo", [\
+      ["workspace:.", {\
+        "packageLocation": "./",\
+        "packageDependencies": [\
+          ["@defuse-protocol/one-click-sdk-typescript", "npm:0.1.15"],\
+          ["ethers", "npm:6.16.0"],\
+          ["near-intents-1click-swap-demo", "workspace:."],\
+          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"],\
+          ["vite", "virtual:37acf137c24d713a65f9150646eff09a53444a41da47ce5c64fd5f1a9464aeeac415722409bf0b78ad5bc8c2db75a86d9535f36953382d8ae6743e56cd4d0126#npm:8.0.0-beta.13"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["negotiator", [\
@@ -1460,8 +1460,8 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:4806ae6e98066b4378e1427ed480aa2d9dc411030658bf7815a2cd3458befef5468cb9dcdd4c69b9470d1e978d8cc240fdbf485997de6a13c4a5cd1af95935f0#npm:8.0.0-beta.13", {\
-        "packageLocation": "./.yarn/__virtual__/vite-virtual-ff074b865b/3/AppData/Local/Yarn/Berry/cache/vite-npm-8.0.0-beta.13-b46180737d-10c0.zip/node_modules/vite/",\
+      ["virtual:37acf137c24d713a65f9150646eff09a53444a41da47ce5c64fd5f1a9464aeeac415722409bf0b78ad5bc8c2db75a86d9535f36953382d8ae6743e56cd4d0126#npm:8.0.0-beta.13", {\
+        "packageLocation": "./.yarn/__virtual__/vite-virtual-c2fbc131f4/3/AppData/Local/Yarn/Berry/cache/vite-npm-8.0.0-beta.13-b46180737d-10c0.zip/node_modules/vite/",\
         "packageDependencies": [\
           ["@oxc-project/runtime", "npm:0.112.0"],\
           ["@types/esbuild", null],\
@@ -1493,7 +1493,7 @@ const RAW_RUNTIME_STATE =
           ["terser", null],\
           ["tinyglobby", "npm:0.2.15"],\
           ["tsx", null],\
-          ["vite", "virtual:4806ae6e98066b4378e1427ed480aa2d9dc411030658bf7815a2cd3458befef5468cb9dcdd4c69b9470d1e978d8cc240fdbf485997de6a13c4a5cd1af95935f0#npm:8.0.0-beta.13"],\
+          ["vite", "virtual:37acf137c24d713a65f9150646eff09a53444a41da47ce5c64fd5f1a9464aeeac415722409bf0b78ad5bc8c2db75a86d9535f36953382d8ae6743e56cd4d0126#npm:8.0.0-beta.13"],\
           ["yaml", null]\
         ],\
         "packagePeers": [\

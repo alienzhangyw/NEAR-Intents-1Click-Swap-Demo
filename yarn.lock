@@ -672,17 +672,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"intents@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "intents@workspace:."
-  dependencies:
-    "@defuse-protocol/one-click-sdk-typescript": "npm:latest"
-    ethers: "npm:^6.13.5"
-    typescript: "npm:~5.9.3"
-    vite: "npm:^8.0.0-beta.13"
-  languageName: unknown
-  linkType: soft
-
 "ip-address@npm:^10.0.1":
   version: 10.1.0
   resolution: "ip-address@npm:10.1.0"
@@ -966,6 +955,17 @@ __metadata:
   checksum: 10c0/40e7f70b3d15f725ca072dfc4f74e81fcf1fbb02e491cf58ac0c79093adc9b0a73b152bcde57df4b79cd097e13023d7504acb38404a4da7bc1cd8e887b82fe0b
   languageName: node
   linkType: hard
+
+"near-intents-1click-swap-demo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "near-intents-1click-swap-demo@workspace:."
+  dependencies:
+    "@defuse-protocol/one-click-sdk-typescript": "npm:latest"
+    ethers: "npm:^6.13.5"
+    typescript: "npm:~5.9.3"
+    vite: "npm:^8.0.0-beta.13"
+  languageName: unknown
+  linkType: soft
 
 "negotiator@npm:^1.0.0":
   version: 1.0.0
