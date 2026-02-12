@@ -377,7 +377,6 @@ function matchesChainKey(chainKey: string, tokenChain: string): boolean {
 function updateAmountInputHint() {
   if (state.swapType === QuoteRequest.swapType.EXACT_OUTPUT) {
     elements.amountLabel.textContent = '目标数量';
-    elements.amountInput.placeholder = '目标数量';
     return;
   }
   elements.amountLabel.textContent = '兑换数量';
@@ -604,7 +603,10 @@ async function handleSwap() {
     }
 
     updateStatus('发送存款交易...');
-    const amountBase = parseUnits(state.amount, originToken.decimals).toString();
+    const amountBase = quote.quote.amountIn ?? null;
+    if (!amountBase) {
+      throw new Error('未返回预计输入数量');
+    }
     const txHash = await sendEvmDeposit({
       token: originToken,
       to: quote.quote.depositAddress,
