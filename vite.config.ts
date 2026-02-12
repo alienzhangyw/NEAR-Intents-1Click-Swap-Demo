@@ -10,4 +10,7 @@ function resolveBase(): string {
 
 export default defineConfig({
   base: resolveBase(),
+  build: {
+    target: 'es2022',
+  },
 });

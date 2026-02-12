@@ -32,8 +32,55 @@ const EVM_CHAIN_IDS: Record<string, number> = {
   op: 10,
   base: 8453,
   polygon: 137,
+  pol: 137,
   bsc: 56,
   avax: 43114,
+  aurora: 1313161554,
+  gnosis: 100,
+  adi: 36900,
+  bera: 80094,
+  plasma: 9745,
+  xlayer: 196,
+  monad: 143,
+};
+
+const EVM_CHAIN_LABELS: Record<string, string> = {
+  eth: 'Ethereum',
+  arb: 'Arbitrum',
+  op: 'Optimism',
+  base: 'Base',
+  polygon: 'Polygon',
+  pol: 'Polygon',
+  bsc: 'BNB Chain',
+  avax: 'Avalanche',
+  aurora: 'Aurora',
+  gnosis: 'Gnosis',
+  adi: 'ADI',
+  bera: 'Bera',
+  plasma: 'Plasma',
+  xlayer: 'XLayer',
+  monad: 'Monad',
+  near: 'NEAR',
+  btc: 'Bitcoin',
+  bch: 'Bitcoin Cash',
+  ltc: 'Litecoin',
+  doge: 'Dogecoin',
+  sol: 'Solana',
+  sui: 'Sui',
+  xrp: 'XRP',
+  tron: 'TRON',
+  ton: 'TON',
+  stellar: 'Stellar',
+  cardano: 'Cardano',
+  aptos: 'Aptos',
+  aleo: 'Aleo',
+  zec: 'Zcash',
+  starknet: 'Starknet',
+};
+
+const CHAIN_KEY_ALIASES: Record<string, string[]> = {
+  polygon: ['pol'],
+  pol: ['polygon'],
 };
 
 const app = document.querySelector<HTMLDivElement>('#app');
@@ -91,12 +138,11 @@ app.innerHTML = `
             <select id="destination-asset"></select>
           </label>
           <label class="field">
-            <span>报价模式</span>
+            <span>兑换模式</span>
             <select id="swap-type">
               <option value="EXACT_INPUT">EXACT_INPUT</option>
               <option value="EXACT_OUTPUT">EXACT_OUTPUT</option>
               <option value="FLEX_INPUT">FLEX_INPUT</option>
-              <option value="ANY_INPUT">ANY_INPUT</option>
             </select>
           </label>
           <div class="field">
@@ -109,7 +155,7 @@ app.innerHTML = `
             <div id="fee-list" class="fee-list"></div>
           </div>
           <label class="field">
-            <span>兑换数量</span>
+            <span id="amount-label">兑换数量</span>
             <input id="amount" type="number" min="0" step="any" placeholder="0.0" />
             <div class="estimate">
               <span>估值</span>
@@ -216,6 +262,7 @@ const elements = {
   feeAmount: document.querySelector<HTMLInputElement>('#fee-amount')!,
   feeAdd: document.querySelector<HTMLButtonElement>('#fee-add')!,
   feeList: document.querySelector<HTMLDivElement>('#fee-list')!,
+  amountLabel: document.querySelector<HTMLSpanElement>('#amount-label')!,
   amountInput: document.querySelector<HTMLInputElement>('#amount')!,
   amountEstimate: document.querySelector<HTMLSpanElement>('#amount-estimate')!,
   recipientInput: document.querySelector<HTMLInputElement>('#recipient')!,
@@ -240,6 +287,7 @@ let balanceRequestId = 0;
 elements.slippageInput.value = String(state.slippageBps);
 elements.swapTypeSelect.value = state.swapType;
 renderFees();
+updateAmountInputHint();
 
 function setBusy(isBusy: boolean) {
   state.isBusy = isBusy;
@@ -283,6 +331,9 @@ function updateQuotePreview(quote: QuoteResponse | null) {
     ? formatUnits(details.minAmountOut, destinationToken.decimals)
     : amountOutDisplay;
   const amountInDisplay = details.amountInFormatted ?? '-';
+  const minAmountInDisplay = originToken && details.minAmountIn
+    ? formatUnits(details.minAmountIn, originToken.decimals)
+    : amountInDisplay;
   const originSymbol = originToken?.symbol ?? '';
   const destinationSymbol = destinationToken?.symbol ?? '';
   const deadline = details.deadline ? new Date(details.deadline) : null;
@@ -290,6 +341,7 @@ function updateQuotePreview(quote: QuoteResponse | null) {
   elements.quotePreview.innerHTML = `
     <div class="quote-row"><span>预计输入</span><strong>${amountInDisplay} ${originSymbol}</strong></div>
     <div class="quote-row"><span>预计输出</span><strong>${amountOutDisplay ?? '-'} ${destinationSymbol}</strong></div>
+    <div class="quote-row"><span>最小输入</span><strong>${minAmountInDisplay ?? '-'} ${originSymbol}</strong></div>
     <div class="quote-row"><span>最小输出</span><strong>${minAmountOutDisplay ?? '-'} ${destinationSymbol}</strong></div>
     <div class="quote-row"><span>预计耗时</span><strong>${details.timeEstimate ?? '-'}s</strong></div>
     <div class="quote-row"><span>截止时间</span><strong>${deadlineText}</strong></div>
@@ -311,8 +363,36 @@ function getTokenById(assetId: string): TokenResponse | undefined {
   return state.tokens.find((token) => token.assetId === assetId);
 }
 
+function getChainLabel(chainKey: string): string {
+  return EVM_CHAIN_LABELS[chainKey] ?? chainKey;
+}
+
+function matchesChainKey(chainKey: string, tokenChain: string): boolean {
+  if (chainKey === tokenChain) {
+    return true;
+  }
+  return (CHAIN_KEY_ALIASES[chainKey] ?? []).includes(tokenChain);
+}
+
+function updateAmountInputHint() {
+  if (state.swapType === QuoteRequest.swapType.EXACT_OUTPUT) {
+    elements.amountLabel.textContent = '目标数量';
+    elements.amountInput.placeholder = '目标数量';
+    return;
+  }
+  elements.amountLabel.textContent = '兑换数量';
+  elements.amountInput.placeholder = '0.0';
+}
+
+function getAmountToken(): TokenResponse | undefined {
+  if (state.swapType === QuoteRequest.swapType.EXACT_OUTPUT) {
+    return getTokenById(state.destinationAssetId);
+  }
+  return getTokenById(state.originAssetId);
+}
+
 function updateAmountEstimate() {
-  const token = getTokenById(state.originAssetId);
+  const token = getAmountToken();
   const amount = Number(state.amount);
   if (!token || !Number.isFinite(amount) || amount <= 0 || !token.price) {
     elements.amountEstimate.textContent = '-';
@@ -351,7 +431,8 @@ function buildQuoteRequest(dry: boolean): QuoteRequest {
     throw new Error('请输入收款地址');
   }
 
-  const amountBase = parseUnits(state.amount, origin.decimals).toString();
+  const amountToken = state.swapType === QuoteRequest.swapType.EXACT_OUTPUT ? destination : origin;
+  const amountBase = parseUnits(state.amount, amountToken.decimals).toString();
   const deadline = new Date(Date.now() + CONFIG.quoteExpiryMinutes * 60 * 1000).toISOString();
 
   return {
@@ -390,14 +471,16 @@ function renderFees() {
 function updateSelectOptions() {
   const chainKey = getChainKey(state.chainId);
   const evmTokens = state.tokens.filter((token) => token.blockchain in EVM_CHAIN_IDS);
-  const originTokens = chainKey ? evmTokens.filter((token) => token.blockchain === chainKey) : evmTokens;
+  const originTokens = chainKey
+    ? evmTokens.filter((token) => matchesChainKey(chainKey, token.blockchain))
+    : evmTokens;
   const destinationTokens = state.tokens;
 
   elements.originSelect.innerHTML = originTokens
-    .map((token) => `<option value="${token.assetId}">${token.symbol} · ${token.blockchain}</option>`)
+    .map((token) => `<option value="${token.assetId}">${token.symbol} · ${getChainLabel(token.blockchain)}</option>`)
     .join('');
   elements.destinationSelect.innerHTML = destinationTokens
-    .map((token) => `<option value="${token.assetId}">${token.symbol} · ${token.blockchain}</option>`)
+    .map((token) => `<option value="${token.assetId}">${token.symbol} · ${getChainLabel(token.blockchain)}</option>`)
     .join('');
 
   if (!state.originAssetId || !originTokens.some((token) => token.assetId === state.originAssetId)) {
@@ -612,6 +695,8 @@ function bindEvents() {
   elements.swapTypeSelect.addEventListener('change', (event) => {
     const value = (event.target as HTMLSelectElement).value as QuoteRequest.swapType;
     state.swapType = value;
+    updateAmountInputHint();
+    updateAmountEstimate();
   });
   elements.feeAdd.addEventListener('click', () => {
     const recipient = elements.feeRecipient.value.trim();
